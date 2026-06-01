@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase, registrarLog, type Produto, type Log, type Orcamento } from '@/lib/supabase'
+import { ImageUpload } from '@/components/image-upload'
 
 const ADMIN_SENHA = 'Hemerson2832'
 const WA_NUMBER = '5568923203049'
@@ -283,13 +284,19 @@ export default function AdminPage() {
                     { label:'Preço (R$) *', key:'preco', type:'number', placeholder:'0.00' },
                     { label:'Estoque', key:'estoque', type:'number', placeholder:'0' },
                     { label:'Badge/Promoção', key:'promocao', type:'text', placeholder:'Ex: Mais Vendido' },
-                    { label:'URL da Foto', key:'imagem_url', type:'text', placeholder:'https://imgbb.com/...' },
                   ].map(f => (
                     <div key={f.key}>
                       <label style={labelStyle}>{f.label}</label>
                       <input type={f.type} placeholder={f.placeholder} value={(form as any)[f.key]} onChange={e => setForm(p => ({ ...p, [f.key]:e.target.value }))} style={inputStyle} />
                     </div>
                   ))}
+                  <div style={{ gridColumn:'1/-1' }}>
+                    <ImageUpload
+                      label="Foto do produto"
+                      value={form.imagem_url}
+                      onChange={url => setForm(p => ({ ...p, imagem_url: url }))}
+                    />
+                  </div>
                   <div>
                     <label style={labelStyle}>Categoria *</label>
                     <select value={form.categoria} onChange={e => setForm(p => ({ ...p, categoria:e.target.value }))} style={{ ...inputStyle, background:'#1c2030' }}>
@@ -368,9 +375,11 @@ export default function AdminPage() {
                     <input type="text" placeholder="#produtos ou https://wa.me/..." value={bannerForm.href} onChange={e => setBannerForm(p => ({ ...p, href:e.target.value }))} style={inputStyle} />
                   </div>
                   <div style={{ gridColumn:'1/-1' }}>
-                    <label style={labelStyle}>URL da imagem de fundo (opcional — deixe vazio para usar cor sólida)</label>
-                    <input type="text" placeholder="https://imgbb.com/sua-imagem.jpg" value={bannerForm.imagem_url} onChange={e => setBannerForm(p => ({ ...p, imagem_url:e.target.value }))} style={inputStyle} />
-                    <p style={{ fontSize:11, color:'rgba(255,255,255,.3)', marginTop:4 }}>Dica: suba a imagem no imgbb.com e cole o link aqui. Tamanho ideal: 1920x500px</p>
+                    <ImageUpload
+                      label="Imagem de fundo do banner (opcional — tamanho ideal: 1920x500px)"
+                      value={bannerForm.imagem_url}
+                      onChange={url => setBannerForm(p => ({ ...p, imagem_url: url }))}
+                    />
                   </div>
                   <div>
                     <label style={labelStyle}>Cor de fundo (quando sem imagem)</label>
